@@ -46,9 +46,17 @@ class User(db.Model):
          # turn bytestring into normal (unicode utf8) string
         hashed_utf8 = hashed.decode("utf8")
 
-        # return instance of user w/username and hashed pwd
-        return cls(first_name=first_name, last_name=last_name, email=email, password=hashed_utf8)
+        user = cls(
+            first_name=first_name,
+            last_name=last_name,
+            email=email,
+            password=hashed_utf8
+        )
 
+        db.session.add(user)
+
+        # return instance of user w/username and hashed pwd
+        return user
 
 
     @classmethod

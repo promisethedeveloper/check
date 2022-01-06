@@ -18,8 +18,7 @@ toolbar = DebugToolbarExtension(app)
 def homePage():
     """Show homepage with links to site areas."""
 
-    # return redirect("/signup")
-    return "HOME PAGE!"
+    return render_template("index.html")
 
 
 @app.route("/signup", methods=["GET", "POST"])
@@ -27,7 +26,8 @@ def signup():
     """Registers a user. Produce form and handles form submissions."""
 
     if "user_id" in session:
-        return redirect("/users/home")
+        return redirect("/")
+
     
     form = SignUpForm()
 
@@ -39,8 +39,20 @@ def signup():
 
         user = User.register(first_name, last_name, email, password)
 
+        db.session.commit()
+
         session["user_id"] = user.id
 
-        return redirect("/user/home")
+        return redirect("/")
     else:
         return render_template("users/signup.html", form=form)
+
+
+
+@app.route("/logout")
+def logout():
+    """Logout route."""
+
+    session.pop("user_id")
+
+    return redirect("/")
